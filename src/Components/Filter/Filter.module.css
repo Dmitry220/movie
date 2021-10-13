@@ -1,0 +1,10 @@
+.filter_block{
+    max-height: 700px;
+    overflow: scroll;
+}
+.listGroup{
+    background: transparent;
+}
+.accordionButton{
+    background: darkslategray;
+}

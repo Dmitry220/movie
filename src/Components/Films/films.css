@@ -1,0 +1,45 @@
+.raiting{
+    padding: 11px;
+    text-align: center;
+    position: absolute;
+    border-radius: 22px;
+    top: -4px;
+    left: -11px;
+}
+.red{
+    background: red;
+    color: white;
+}.yellow{
+     background: yellow;
+ }.green{
+      background: lawngreen;
+  }.orange{
+       background: orange;
+   }
+.rating-area {
+    overflow: hidden;
+    margin: 0 auto;
+    display: flex;
+}
+.rating-area:not(:checked) > label {
+    width: 42px;
+    padding: 0;
+    cursor: pointer;
+    font-size: 32px;
+    line-height: 32px;
+    display: flex;
+    color: gold;
+    text-shadow: 1px 1px goldenrod;
+
+}
+.rating-area:not(:checked) > label:before {
+    content: '★';
+}
+.cardFilms:hover{
+    transform: scale(1.05);
+}
+
+* {
+    -webkit-transition: 300ms;
+    transition: 300ms;
+}
