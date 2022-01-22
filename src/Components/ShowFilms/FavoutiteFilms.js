@@ -1,6 +1,6 @@
 import React, {memo, useEffect} from "react";
 import Films from "../Films/Films";
-import { Pagination } from "../Pagination/Pagination";
+// import { Pagination } from "../Pagination/Pagination";
 import {useDispatch, useSelector} from "react-redux";
 
 export const FavouriteFilms = () => {
@@ -10,17 +10,9 @@ export const FavouriteFilms = () => {
     const onPageChanged = (pageNumber) => {
         //dispatch(getTop100Films(pageNumber))
     };
-    const MemoPagination = memo(Pagination);
     return (
         <div className="container pt-5">
-
-            <Films films={favouriteFilms} />
-            {/*<MemoPagination*/}
-            {/*    pagesCount={pagesCount}*/}
-            {/*    currentPage={currentPage}*/}
-            {/*    onPageChanged={onPageChanged}*/}
-            {/*    portionSize={5}*/}
-            {/*/>*/}
+            <Films films={favouriteFilms} pagesCount={1}/>
         </div>
     );
 };

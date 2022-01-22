@@ -1,10 +1,13 @@
 import React from "react";
-import styles from './preloader.module.css'
-
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import style from './preloader.module.css'
 export const Preloader = () => {
+    const antIcon = <LoadingOutlined style={{ fontSize: 156 }} spin />;
     return (
-        <div className={styles.preloader} >
-            Загрузка
+        <div className={style.preloader}>
+            <Spin indicator={antIcon} />
         </div>
+
     );
 };

@@ -10,9 +10,8 @@ import {persistor} from "./Redux/storeRedux";
 import {HashRouter} from "react-router-dom";
 import App from "./App";
 
-console.log(process.env.PUBLIC_URL)
 ReactDOM.render(
-    <HashRouter basename={process.env.PUBLIC_URL} >
+    <HashRouter  >
         <Provider store={store}>
             <PersistGate  persistor={persistor}>
                 <App />

@@ -1,0 +1,150 @@
+
+.textTheme{
+    color: #000000;
+    font-size: 18px;
+    padding: 5px 5px 5px 15px;
+    cursor: pointer;
+}
+.ant-layout-header {
+    padding: 0 10px;
+    line-height: 63px;
+}
+.headerFixed{
+    background: #ffffff;
+}
+
+ .search {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50px;
+    height: 50px;
+     /*background: transparent;*/
+    border-radius: 50%;
+    transition: all 0.5s;
+    z-index: 4;
+    /*box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);*/
+}
+
+ .search:hover {
+    cursor: pointer;
+}
+ .search::before {
+     content: "";
+     position: absolute;
+     margin: auto;
+     top: 12px;
+     right: 0;
+     bottom: 0;
+     left: 12px;
+     width: 10px;
+     height: 2px;
+     background: #000000;
+     transform: rotate(
+             45deg);
+     transition: all .5s;
+}
+.search.searchDark::before {
+    background: #ffffff;
+}
+.search.searchDark::after {
+    border: 2px solid #ffffff;
+}
+ .search::after {
+    content: "";
+    position: absolute;
+    margin: auto;
+    top: -5px;
+    right: 0;
+    bottom: 0;
+    left: -5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid #000000;
+    transition: all .5s;
+}
+.inputSearch {
+    font-family: 'XBRoyaBold','Inconsolata', monospace;
+    position: absolute;
+    margin: auto;
+    text-align: left;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    outline: none;
+    border: none;
+    background: #3b3939;
+    color: white;
+    padding: 0 80px 0 20px;
+    border-radius: 30px;
+    transition: all 0.5s;
+    opacity: 0;
+    z-index: 5;
+    font-weight: bolder;
+}
+.inputSearch.inputSearchDark{
+    background: aliceblue;
+    color: #020b17;
+}
+.inputSearch:hover {
+    cursor: pointer;
+}
+.inputSearch:focus {
+    width: 300px;
+    opacity: 1;
+    cursor: text;
+}
+.inputSearch:focus ~ .search {
+    background: #151515;
+    z-index: 6;
+}
+.inputSearch.inputSearchDark:focus ~ .search{
+    background: aliceblue;
+}
+.inputSearch:focus ~ .search::before {
+    top: 0;
+    left: 0;
+    background: white;
+    width: 15px;
+}
+.inputSearch.inputSearchDark:focus ~ .search::before {
+    background: #020b17;
+}
+.inputSearch:focus ~ .search::after {
+    top: 0;
+    left: 0;
+    width: 15px;
+    height: 2px;
+    border: none;
+    background: white;
+    border-radius: 0%;
+    transform: rotate(-45deg);
+}
+.inputSearch.inputSearchDark:focus ~ .search::after {
+    background: #020b17;
+}
+.inputSearch::placeholder {
+    color: white;
+    opacity: 0.5;
+    font-weight: bolder;
+}
+.inputSearch.inputSearchDark::placeholder {
+    color: #020b17;
+}
+.logo-text{
+    font-family: "Baskerville Old Face";
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 6px;
+}
+.textBadge{
+    color: #000;
+}
+.textBadge.textBadgeDark{
+    color: #9aa5af;
+}

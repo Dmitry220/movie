@@ -1,0 +1,28 @@
+/*style={{background: '#090926'}}*/
+/*background: 'dimgrey'*/
+
+.layout_content_dark {
+    background: #020b17
+}
+.header_dark{
+background: #001529;
+}
+.textThemeDark{
+    color: aliceblue;
+    font-size: 18px;
+    padding: 5px 5px 5px 15px;
+    cursor: pointer;
+}
+.card_dark{
+    background: #001529 !important;
+    border: none !important;
+}
+.meta_card_dark{
+    background: #151e2a;
+}
+.contentDark{
+    background: #020b17;
+}
+
+
+

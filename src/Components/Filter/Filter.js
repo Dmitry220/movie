@@ -1,179 +1,222 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getGenreAndCountries} from "../../Redux/actions";
-import {NavLink} from "react-router-dom";
-import style from './Filter.module.css'
-import Slider from 'react-input-slider';
+import {FilterOutlined, StarOutlined, CalendarOutlined, RocketOutlined, UpSquareOutlined} from '@ant-design/icons';
+import {Slider, InputNumber, Row, Menu, Select, Button, Col} from 'antd';
+import {Link} from "react-router-dom";
+import {darkThemeSelector} from "../../Redux/selectors";
+const {Option} = Select;
+const {SubMenu} = Menu;
 
 const Filter = () => {
 
     const dispatch = useDispatch()
     const genres = useSelector((state) => state.filter.genres);
     const countries = useSelector((state) => state.filter.countries);
-    const [value, setValue] = useState('');
-    const [listCountries, setListCountries] = useState([]);
+    let currentTime = new Date()
+    let year = currentTime.getFullYear();
+    const darkTheme = useSelector(darkThemeSelector);
     const [filteredParams, setFilteredParams] = useState([]);
     const [selectedGenre, setSelectedGenre] = useState('')
     const [selectedCountry, setSelectedCountry] = useState('')
-    const [selectedYearFrom, setSelectedYearFrom] = useState({x:1880})
-    const [selectedYearTo, setSelectedYearTo] = useState({x:2021})
-    const [selectedRatingFrom, setSelectedRatingFrom] = useState({x:0})
-    const [selectedRatingTo, setSelectedRatingTo] = useState({x:10})
-    const [order, setOrder] = useState('order=YEAR')
+    const [selectedYear, setSelectedYear] = useState({min: 1880, max: year})
+    const [selectedRating, setSelectedRating] = useState({min: 0, max: 10})
+    const [order, setOrder] = useState()
+    const listSort = ['По году', 'По рейтингу']
 
-    useEffect(() => {
-        setListCountries(countries);
-    }, [countries])
+
+    const yearSliderOnChange = value => {
+        if (value[0] < value[1]) {
+            setSelectedYear({min: value[0], max: value[1]});
+        }
+    }
+    const yearInputMaxOnChange = value => {
+        if (selectedRating.min < value) {
+            setSelectedYear({...selectedYear, max: value});
+        }
+    }
+    const yearInputMinOnChange = value => {
+        if (selectedRating.max > value) {
+            setSelectedYear({...selectedYear, min: value});
+        }
+    }
+    const ratingSliderOnChange = value => {
+        if (value[0] < value[1]) {
+            setSelectedRating({min: value[0], max: value[1]});
+        }
+    }
+    const ratingInputMaxOnChange = value => {
+        if (selectedRating.min < value) {
+            setSelectedRating({...selectedRating, max: value});
+        }
+    }
+    const ratingInputMinOnChange = value => {
+        if (selectedRating.max > value) {
+            setSelectedRating({...selectedRating, min: value});
+        }
+    }
+    const onSortTypeChange = value => {
+        if (value === 'По году') setOrder('YEAR')
+        else if (value === 'По рейтингу') setOrder('RATING');
+    }
+    const onCountryChange = value => {
+        setSelectedCountry(value)
+    }
+    const onGenreChange = value => {
+        setSelectedGenre(value)
+    }
+
 
     useEffect(() => {
         dispatch(getGenreAndCountries());
     }, [dispatch]);
 
     useEffect(() => {
-        const filterArray = countries.filter((c) => {
-            if (c.country.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) === 0) return c
-        })
-        setListCountries(filterArray);
-    }, [value])
-
-    useEffect(()=>{
-        setFilteredParams(prevState => [...prevState, order, selectedGenre, selectedCountry, `&yearFrom=${selectedYearFrom.x}`, `&yearTo=${selectedYearTo.x}`,
-            `&ratingFrom=${selectedRatingFrom.x}`, `&ratingTo=${selectedRatingTo.x}` ]);
-        return ()=>{
+        setFilteredParams(prev => [...prev,
+            order && `order=${order}`,
+            selectedGenre && `&genre=${selectedGenre}`,
+            selectedCountry && `&country=${selectedCountry}`,
+            `&ratingFrom=${selectedRating.min}`,
+            `&ratingTo=${selectedRating.max}`,
+            `&yearFrom=${selectedYear.min}`,
+            `&yearTo=${selectedYear.max}`,
+        ])
+        return () => {
             setFilteredParams([]);
         }
-    }, [selectedGenre, selectedCountry, selectedYearFrom.x, selectedYearTo.x, selectedRatingFrom.x, selectedRatingTo.x, order])
+    }, [selectedGenre, selectedCountry, selectedRating, selectedYear, order])
 
     return (
-        <div className="container-fluid pt-5">
-            <div className="accordion dark" id="accordionExample">
-                <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingOne">
-                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                            Жанры
-                        </button>
-                    </h2>
-                    <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne"
-                         data-bs-parent="#accordionExample">
-                        <ul className={`list-group ${style.filter_block}`}>
-                            {genres.map((g) => {
-                                return (
-                                    <li
-                                        className={`list-group-item ${selectedGenre===`&genre=${g.id}` && 'active'}`}
-                                        style={{cursor: 'pointer'}}
-                                        key={g.id}
-                                        onClick={(e)=>setSelectedGenre(`&genre=${g.id}`)}
-                                    >
-                                        {g.genre}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                </div>
-                <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingTwo">
-                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Страны
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo"
-                         data-bs-parent="#accordionExample">
-                        <ul className={`list-group ${style.filter_block}`}>
-                            <input type="text" value={value} placeholder={'Название страны'}
-                                   onChange={(e) => setValue(e.target.value)}/>
-                            {!listCountries.length && <li className="list-group-item">{"Ничего не найдено"}</li>}
-                            {listCountries.map((c) => {
-                                return (
-                                    <li
-                                        className={`list-group-item ${selectedCountry===`&country=${c.id}` && 'active'}`}
-                                        key={c.id}
-                                        style={{cursor: 'pointer'}}
-                                        onClick={(e)=>setSelectedCountry(`&country=${c.id}`)}
-                                    >
-                                        {c.country}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                </div>
-                <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingFour">
-                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                            Год
-                        </button>
-                    </h2>
-                    <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingFour"
-                         data-bs-parent="#accordionExample">
-                        <div className="accordion-body">
-                            <div>От {selectedYearFrom.x}</div>
-                            <div>
-                                <Slider axis="x" x={selectedYearFrom.x} xmin={1880} xmax={2021} onChange={({x})=>setSelectedYearFrom(prev=>({...prev, x}))}/>
-                            </div>
-                            <div>До {selectedYearTo.x}</div>
-                            <div>
-                                <Slider axis="x" x={selectedYearTo.x} xmin={selectedYearFrom.x} xmax={2021} onChange={({x})=>setSelectedYearTo(prev=>({...prev, x}))}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingFour">
-                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFive" aria-expanded="false" aria-controls="headingFive">
-                            Рейтинг
-                        </button>
-                    </h2>
-                    <div id="collapseFive" className="accordion-collapse collapse" aria-labelledby="headingFive"
-                         data-bs-parent="#accordionExample">
-                        <div className="accordion-body">
-                            <div>От {selectedRatingFrom.x}</div>
-                            <div>
-                                <Slider axis="x" x={selectedRatingFrom.x} xmin={0} xmax={10} onChange={({x})=>setSelectedRatingFrom(prev=>({...prev, x}))}/>
-                            </div>
-                            <div>До {selectedRatingTo.x}</div>
-                            <div>
-                                <Slider axis="x" x={selectedRatingTo.x} xmin={selectedRatingFrom.x} xmax={10} onChange={({x})=>setSelectedRatingTo(prev=>({...prev, x}))}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="accordion-item">
-                    <h2 className="accordion-header" id="headingFour">
-                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseSix" aria-expanded="false" aria-controls="headingSix">
-                            Сортировка
-                        </button>
-                    </h2>
-                    <div id="collapseSix" className="accordion-collapse collapse" aria-labelledby="headingSix"
-                         data-bs-parent="#accordionExample">
-                        <div className="accordion-body">
-                            <ul className={'list-group'}>
-                                <li
-                                    className={`list-group-item ${order==='order=RATING' && 'active'}`}
-                                    style={{cursor: 'pointer'}}
-                                    onClick={(e)=>setOrder(`order=RATING`)}
-                                >Отсортировать по рейтингу</li>
-                                <li
-                                    className={`list-group-item ${order==='order=YEAR' && 'active'}`}
-                                    style={{cursor: 'pointer'}}
-                                    onClick={(e)=>setOrder(`order=YEAR`)}
-                                >Отсортировать по году</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <NavLink to={`/films/${filteredParams.join('')}`} className={'btn btn-outline-primary p-2 justify-content-center d-flex text-white border-white'}>
-                    Отфильтровать
-                </NavLink>
+        <>
+ <Menu
+            mode="inline"
+            theme={darkTheme ? 'dark' : 'light'}
+            style={{height: '100%'}}
+        >
+            <SubMenu key="sub1" icon={<FilterOutlined/>} title="Жанры">
+                <Select
+                    showSearch
+                    style={{width: '100%'}}
+                    placeholder="Выберите жанр"
+                    optionFilterProp="children"
+                    onChange={onGenreChange}
+                    listHeight={500}
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) === 0
+                    }
+                >
+                    {genres.map((g) => {
+                        return (
+                            <Option
+                                key={g.id}
 
-            </div>
-        </div>
+                            >
+                                {g.genre}
+                            </Option>
+                        );
+                    })}
+                </Select>
+            </SubMenu>
+            <SubMenu key="sub2" icon={<RocketOutlined/>} title="Страны">
+                <Select
+                    showSearch
+                    style={{width: '100%'}}
+                    listHeight={500}
+                    placeholder="Введите название страны"
+                    optionFilterProp="children"
+                    onChange={onCountryChange}
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) === 0
+                    }
+                >
+                    {countries.map((c) => {
+                        return (
+                            <Option
+                                key={c.id}
+                                value={c.id}
+                            >
+                                {c.country}
+                            </Option>
+                        );
+                    })}
+                </Select>
+            </SubMenu>
+            <SubMenu key="sub3" icon={<CalendarOutlined/>} title="Год">
+                <Slider min={1880} max={year}
+                        style={{paddingLeft: 5}}
+                        trackStyle={{backgroundColor: 'red', height: 20}}
+                        handleStyle={{borderColor: 'red', height: 20}}
+                        range={true}
+                        onChange={yearSliderOnChange}
+                        defaultValue={[selectedYear.min, selectedYear.max]}
+                        value={[selectedYear.min, selectedYear.max]}
+                />
+                <Row justify="space-around" align="middle" style={{paddingLeft: 5, paddingRight: 5, paddingBottom: 15}}>
+                    <InputNumber
+                        className="min-input-main"
+                        min={1880}
+                        max={year}
+                        value={selectedYear.min}
+                        onChange={yearInputMinOnChange}
+                    />
+                    <div> до</div>
+                    <InputNumber
+                        className="min-input-main"
+                        min={1880}
+                        max={year}
+                        value={selectedYear.max}
+                        onChange={yearInputMaxOnChange}
+                    />
+                </Row>
+            </SubMenu>
+            <SubMenu key="sub4" icon={<StarOutlined/>} title="Рейтинг">
+                <Slider min={0} max={10}
+                        style={{paddingLeft: 5}}
+                        trackStyle={{backgroundColor: 'red', height: 20}}
+                        handleStyle={{borderColor: 'red', height: 20}}
+                        range={true}
+                        onChange={ratingSliderOnChange}
+                        defaultValue={[selectedRating.min, selectedRating.max]}
+                        value={[selectedRating.min, selectedRating.max]}
+                />
+                <Row justify="space-around" align="middle" style={{paddingLeft: 5, paddingRight: 5, paddingBottom: 15}}>
+                    <InputNumber
+                        className="min-input-main"
+                        min={0}
+                        max={10}
+                        value={selectedRating.min}
+                        onChange={ratingInputMinOnChange}
+                    />
+                    <div> до</div>
+                    <InputNumber
+                        className="min-input-main"
+                        min={0}
+                        max={10}
+                        value={selectedRating.max}
+                        onChange={ratingInputMaxOnChange}
+                    />
+                </Row>
+            </SubMenu>
+            <SubMenu key="sub5" icon={<UpSquareOutlined/>} title="Сортирвока">
+                <Select style={{width: '100%'}} defaultValue={'По году'} onChange={onSortTypeChange}>
+                    {
+                        listSort.map(el => (
+                            <Option key={el}>{el}</Option>
+                        ))
+                    }
+                </Select>
+            </SubMenu>
+            <Row justify={'center'} style={{marginTop: 10}}>
+                <Button type={darkTheme && "primary"} block><Link
+                    to={`/films/${filteredParams.join('')}`}>Отфильтровать</Link></Button>
+            </Row>
+        </Menu>
+
+    </>
     );
+
+
 };
 
 export default Filter;
+

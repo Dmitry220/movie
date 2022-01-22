@@ -26,7 +26,10 @@ export const filmsAPI = {
     getListGenreAndCountry (){
         return instance.get(`filters`);
     },
+    // return instance.get(`search-by-filters?order=YEAR&country=${idCountry}&genre=${idGenre}
+    //     &ratingFrom=${ratingFrom}&ratingTo=${ratingTo}&yearFrom=${yearFrom}&yearTo=${yearTo}&page=${currentPage}`)
     getFilteredParams (filteredParams, currentPage){
+        console.log(filteredParams)
         return instance.get(`search-by-filters?${filteredParams}&page=${currentPage}`)
     },
     getFilmsById(id){

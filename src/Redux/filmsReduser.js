@@ -1,11 +1,18 @@
-import {SHOW_LOADING, HIDE_LOADING, SHOW_FILMS, SET_SELECTED_FILM_ID, DELETE_SELECTED_FILM_ID} from "./typeAction";
+import {
+    SHOW_LOADING,
+    HIDE_LOADING,
+    SHOW_FILMS,
+    SET_SELECTED_FILM_ID,
+    DELETE_SELECTED_FILM_ID,
+} from "./typeAction";
 
 let initialState = {
     pagesCount: null,
     films: [],
     isLoading: false,
     currentPage: 1,
-    selectedMovie: null
+    selectedMovie: null,
+    isResponse: false
 }
 
 export const filmsReduser = (state = initialState, action) => {

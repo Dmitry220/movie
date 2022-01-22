@@ -2,45 +2,6 @@ body{
   background: darkslategray;
   width: 100%;
   height: 100%;
-}
-.page-link{
-  cursor: pointer;
-}
-.form-control{
-  width: 40rem;
+
 }
 
-
-.pagination_none{
-  display: block;
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 30px;
-  height: 30px;
-  background: red;
-}
-.k{
-  width: 30%;
-  height: 300px;
-  margin: 5px auto;
-  font-size: 20px;
-  overflow: hidden;
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-}
-.k ul{
-  list-style: none;
-  text-align: left;
-  background: white;
-  color: black;
-}
-.k ul li:hover{
-  background: grey;
-  cursor: pointer;
-}
-.page-item{
-  cursor: pointer;
-}

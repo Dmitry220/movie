@@ -1,8 +1,8 @@
 import Films from "../Films/Films";
 import {getFilmsFromSearch} from "../../Redux/actions";
 import { useDispatch, useSelector} from "react-redux";
-import { Pagination } from "../Pagination/Pagination";
-import {memo, useEffect} from "react";
+
+import React, {memo, useEffect} from "react";
 import {useParams} from "react-router-dom";
 
 export const ShowOnSearchFilms = (props) => {
@@ -21,17 +21,16 @@ export const ShowOnSearchFilms = (props) => {
     let onPageChanged = (pageNumber) => {
         dispatch(getFilmsFromSearch(searchTest, pageNumber));
     };
-    const MemoPagination = memo(Pagination);
+
     console.log('Render Show Films By Search');
     return (
         <div className="container pt-5">
-            <Films films={films} />
-            <MemoPagination
-                pagesCount={pagesCount}
-                currentPage={currentPage}
+            <Films
+                films={films}
                 onPageChanged={onPageChanged}
-                portionSize={5}
-            />
+                pagesCount={pagesCount}
+                currentPage={currentPage}/>
+
         </div>
     );
 };

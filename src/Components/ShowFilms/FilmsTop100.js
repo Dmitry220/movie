@@ -1,13 +1,15 @@
 import React, {memo, useEffect} from "react";
 import Films from "../Films/Films";
-import { Pagination } from "../Pagination/Pagination";
 import {getTop100Films} from "../../Redux/actions";
 import {useDispatch, useSelector} from "react-redux";
+import {Preloader} from "../Loader/Preloader";
 
 export const FilmsTop100 = () => {
+    console.log('Render Top 100')
     const currentPage = useSelector(state => state.films.currentPage)
     const pagesCount = useSelector(state => state.films.pagesCount)
     const films = useSelector(state => state.films.films)
+
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -17,18 +19,14 @@ export const FilmsTop100 = () => {
     const onPageChanged = (pageNumber) => {
         dispatch(getTop100Films(pageNumber))
     };
-    const MemoPagination = memo(Pagination);
     return (
-        <div className="container pt-5">
-
-            <Films films={films} />
-            <MemoPagination
-                pagesCount={pagesCount}
-                currentPage={currentPage}
-                onPageChanged={onPageChanged}
-                portionSize={5}
-            />
-        </div>
+            <div className="container pt-5">
+                    <Films
+                        films={films}
+                        onPageChanged={onPageChanged}
+                        pagesCount={pagesCount}
+                        currentPage={currentPage}/>
+            </div>
     );
 };
 

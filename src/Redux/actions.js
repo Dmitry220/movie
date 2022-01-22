@@ -4,7 +4,12 @@ import {
     GET_GENRES,
     HANDLER_INPUT,
     HIDE_LOADING,
-    SHOW_LOADING, SET_FAVOURITE_FILMS, DELETE_FAVOURITE_FILMS, SET_SELECTED_FILM_ID, GET_VIDEO, DELETE_SELECTED_FILM_ID,
+    SHOW_LOADING,
+    SET_FAVOURITE_FILMS,
+    DELETE_FAVOURITE_FILMS,
+    SET_SELECTED_FILM_ID,
+    GET_VIDEO,
+    DELETE_SELECTED_FILM_ID, CHANGE_THEME,
 } from "./typeAction";
 
 
@@ -29,10 +34,12 @@ export const setFilms = (films, pagesCount, currentPage) => ({
 })
 
 export const getTop100Films = (currentPage) => (dispatch) => {
+    dispatch(showLoading())
     filmsAPI
         .getFilmsTOP100(currentPage)
         .then((response) => {
             dispatch(setFilms(response.data.films, response.data.pagesCount, currentPage))
+            dispatch(hideLoading())
         })
         .catch(() => {
             console.log("Error");
@@ -40,11 +47,12 @@ export const getTop100Films = (currentPage) => (dispatch) => {
 };
 
 export const getAwaitFilms = (currentPage) => (dispatch) => {
+    dispatch(showLoading())
     filmsAPI
         .getAwaitFilms(currentPage)
         .then((response) => {
-            console.log(response.data)
             dispatch(setFilms(response.data.films, response.data.pagesCount, currentPage))
+            dispatch(hideLoading())
         })
         .catch(() => {
             console.log("Error");
@@ -52,10 +60,12 @@ export const getAwaitFilms = (currentPage) => (dispatch) => {
 };
 
 export const getFilmsFromSearch = (query, currentPage) => (dispatch) => {
+    dispatch(showLoading())
     filmsAPI
         .getFilmsFromSearch(query, currentPage)
         .then((response) => {
             dispatch(setFilms(response.data.films, response.data.pagesCount, currentPage))
+            dispatch(hideLoading())
         })
         .catch(() => {
             console.log("Error");
@@ -69,11 +79,19 @@ export const getGenreAndCountries  = () => (dispatch) => {
 };
 
 export const setFilteredParams = (filteredParams, currentPage = 1) => (dispatch) => {
+    dispatch(showLoading())
     filmsAPI
         .getFilteredParams(filteredParams, currentPage)
         .then((response) => {
-            dispatch(setFilms(response.data.films, response.data.pagesCount, currentPage))
-        });
+            if (response.status === 200) {
+                dispatch(setFilms(response.data.films, response.data.pagesCount, currentPage))
+                dispatch(hideLoading())
+            }
+        })
+        .catch(() => {
+            dispatch(setFilms([]))
+            dispatch(hideLoading())
+    });
 };
 
 export const setFavouritesFilms = (payload) => ({type: SET_FAVOURITE_FILMS, payload})
@@ -81,12 +99,17 @@ export const setFavouritesFilms = (payload) => ({type: SET_FAVOURITE_FILMS, payl
 export const deleteFavouritesFilms = (payload) => ({type: DELETE_FAVOURITE_FILMS, payload})
 
 export const setSelectedFilmById = (id) => (dispatch)=> {
+    dispatch(showLoading())
     filmsAPI.getFilmsById(id).then((response) => {
         dispatch(setSelectedFilmByIdAC(response.data.data));
+        dispatch(hideLoading())
     });
 }
 
 export const setSelectedFilmByIdAC = (payload) => ({type: SET_SELECTED_FILM_ID, payload})
 
 export const deleteSelectedFilmById = () => ({type: DELETE_SELECTED_FILM_ID})
+
+export const changeTheme = () => ({type: CHANGE_THEME})
+
 
