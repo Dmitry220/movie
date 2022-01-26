@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Films from "../Films/Films";
 import {useSelector} from "react-redux";
 import ReactPaginate from "react-paginate";
@@ -41,7 +41,7 @@ export const FavouriteFilms = () => {
           breakLinkClassName={"page-link"}
           activeClassName={"active"}
         />
-        <Films films={!Array.isArray(favouriteFilms[0]) ? favouriteFilms : favouriteFilms[currentPage]}  pagesCount={totalPage}/>
+        <Films films={!Array.isArray(favouriteFilms[0]) ? favouriteFilms : favouriteFilms[currentPage]} />
      </div>
 
 

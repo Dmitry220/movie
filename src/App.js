@@ -1,6 +1,8 @@
-import './reset.css'
 import React, {memo, useEffect, useState} from "react";
 import {HashRouter as Router, Route, Switch} from "react-router-dom";
+import './reset.css'
+import './Dark.css'
+import './App.css'
 import Filter from "./Components/Filter/Filter";
 import SortFilmsOnGenre from "./Components/ShowFilms/SortFilms";
 import {SearchFilms} from "./Components/ShowFilms/SearchFilms";
@@ -9,8 +11,6 @@ import {FilmsTop100} from "./Components/ShowFilms/FilmsTop100";
 import DescriptionFilm from "./Components/DescriptionFilm/DescriptionFilm";
 import {FavouriteFilms} from "./Components/ShowFilms/FavoutiteFilms";
 import {darkThemeSelector} from "./Redux/selectors";
-import './Dark.css'
-import './App.css'
 import {Header} from "./Components/Header/Header";
 import {FilterMob} from "./Components/Filter/FilterMob";
 import {useSelector} from "react-redux";
@@ -28,10 +28,9 @@ const MemoSortFilmsOnGenre = memo(SortFilmsOnGenre)
 const App = () => {
 
    const [burgerActive, setBurgerActive] = useState(false)
-   const [theme, setTheme] = useLocalStorage("theme", 'light');
-   const themeToggler = () => theme === 'light' ? setTheme('dark') : setTheme('light')
    const darkTheme = useSelector(darkThemeSelector);
    const [matchesMedia, setMatchesMedia] = useState(window.matchMedia("(min-width: 992px)").matches);
+
    useEffect(() => {
       const handler = e => setMatchesMedia(e.matches);
       window.matchMedia("(min-width: 992px)").addEventListener('change', handler);
@@ -41,13 +40,7 @@ const App = () => {
 
    const window768 = window.matchMedia('(max-width: 768px)')
 
-   function myFunction(x) {
-      if (x.matches) { // If media query matches
-        return <FilterMob />
-      } else {
-        return  <Filter />
-      }
-   }
+   const media = x => x.matches ?  <FilterMob /> : <Filter />
 
    return (
      <Router>
@@ -55,7 +48,7 @@ const App = () => {
         <Header themeToggler={changeTheme} burgerActive={burgerActive} setBurgerActive={setBurgerActive}/>
 
         <div className={darkTheme ? "container dark" : "container"}>
-           { myFunction(window768)}
+           { media(window768)}
              <Switch>
                 <Route exact path={"/"} component={MemoFilmsAwaitFilms}/>
                 <Route path={"/favourite"} component={MemoFavouriteFilms}/>
@@ -67,33 +60,9 @@ const App = () => {
              </Switch>
         </div>
 
-
      </Router>
 
    );
 };
 
 export default App;
-
-
-function useLocalStorage(key, initialValue) {
-   const [storedValue, setStoredValue] = useState(() => {
-      try {
-         const item = window.localStorage.getItem(key);
-         return item ? JSON.parse(item) : initialValue;
-      } catch (error) {
-         console.log(error);
-         return initialValue;
-      }
-   });
-   const setValue = (value) => {
-      try {
-         const valueToStore = value instanceof Function ? value(storedValue) : value;
-         setStoredValue(valueToStore);
-         window.localStorage.setItem(key, JSON.stringify(valueToStore));
-      } catch (error) {
-         console.log(error);
-      }
-   };
-   return [storedValue, setValue];
-}

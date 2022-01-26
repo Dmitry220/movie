@@ -10,12 +10,11 @@ export const SearchFilms = (props) => {
    const {name} = useParams();
    const films = useSelector(state => state.films.films)
    const pagesCount = useSelector(state => state.films.pagesCount)
-   const currentPage = useSelector(state => state.films.currentPage)
    const dispatch = useDispatch();
 
    useEffect(() => {
       dispatch(getFilmsFromSearch(name, 1));
-   }, [name])
+   }, [dispatch, name])
 
    let onPageChanged = (data) => {
       let pageNumber = data.selected + 1
@@ -45,11 +44,7 @@ export const SearchFilms = (props) => {
           breakLinkClassName={"page-link"}
           activeClassName={"active"}
         />
-        <Films
-          films={films}
-          onPageChanged={onPageChanged}
-          pagesCount={pagesCount}
-          currentPage={currentPage}/>
+        <Films films={films}/>
         <ReactPaginate
           previousLabel={"Back"}
           nextLabel={"Next"}

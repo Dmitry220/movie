@@ -20,7 +20,7 @@ const DescriptionFilm = () => {
       return () => {
          dispatch(deleteSelectedFilmById())
       }
-   }, [id])
+   }, [dispatch, id])
 
    if(!selectedFilm) return null
 

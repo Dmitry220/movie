@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import filterStyle from './Filter.module.css'
 import Filter from "./Filter";
 import {StyleMobile} from "../utils/StyleMob";
-import header from "../Header/header.module.css";
 import {useSelector} from "react-redux";
 import {darkThemeSelector} from "../../Redux/selectors";
 
@@ -15,7 +14,6 @@ export const FilterMob = () => {
      <div className={filterStyle.spoiler}>
         <div className={filterStyle.spoiler__item}>
            <h2
-             // className={spoilerShow ? filterStyle.spoiler__title + ' ' + filterStyle.active : filterStyle.spoiler__title}
              className={StyleMobile(filterStyle, filterStyle.spoiler__title, spoilerShow, darkTheme)}
              onClick={()=>setSpoilerShow((prev)=>!prev)}>
               Фильтр

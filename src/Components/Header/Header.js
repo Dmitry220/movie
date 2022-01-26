@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import header from './header.module.css'
 import {Link} from "react-router-dom";
@@ -6,7 +6,6 @@ import {useHistory} from "react-router";
 import {darkThemeSelector} from "../../Redux/selectors";
 import logo from './../../logo.svg'
 import {StyleMobile} from "../utils/StyleMob";
-
 
 
 export const Header = ({themeToggler, burgerActive, setBurgerActive}) => {
@@ -17,7 +16,6 @@ export const Header = ({themeToggler, burgerActive, setBurgerActive}) => {
    const darkTheme = useSelector(darkThemeSelector);
    const [timer, setTimer] = useState(null)
    const dispatch = useDispatch()
-
    const search = (e) => setSearchValue(e.target.value)
 
    useEffect(()=>{
@@ -32,27 +30,10 @@ export const Header = ({themeToggler, burgerActive, setBurgerActive}) => {
            await history.push(`/film/${searchValue}`)
         }, 500)
       )
-   },[searchValue])
+   },[timer,history, searchValue])
 
-   let scrollPrev = 0;
-
-   useEffect(() => {
-
-      const onScroll = e => {
-         let scrolled = window.pageYOffset;
-         if (scrolled > 100 && scrolled > scrollPrev) {
-            document.querySelector(`.${header.header}`).classList.add(`${header.out}`);
-         } else {
-            document.querySelector(`.${header.header}`).classList.remove(`${header.out}`);
-         }
-         scrollPrev = scrolled;
-      };
-      window.addEventListener("scroll", onScroll);
-      return () => window.removeEventListener("scroll", onScroll);
-   }, [scrollPrev])
-
-   useEffect(() => {
-      document.querySelector('body').classList.toggle('lock');
+   useEffect(()=>{
+      document.querySelector('body').classList.toggle('lock')
    }, [burgerActive])
 
    return (

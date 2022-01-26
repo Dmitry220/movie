@@ -8,7 +8,6 @@ import {
     SET_FAVOURITE_FILMS,
     DELETE_FAVOURITE_FILMS,
     SET_SELECTED_FILM_ID,
-    GET_VIDEO,
     DELETE_SELECTED_FILM_ID, CHANGE_THEME,
 } from "./typeAction";
 
@@ -85,8 +84,6 @@ export const getMovieByFilter = (ratingFrom, ratingTo, yearFrom, yearTo, page ,g
     filmsAPI
         .filterSearch(ratingFrom, ratingTo, yearFrom, yearTo, page, genre, country,order)
         .then((response) => {
-
-            console.log(response)
             if (response.status === 200) {
                 dispatch(setFilms(response.data.films, response.data.pagesCount, page))
                 dispatch(hideLoading())

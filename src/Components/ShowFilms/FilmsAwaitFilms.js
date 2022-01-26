@@ -43,11 +43,7 @@ export const FilmsAwaitFilms = () => {
           breakLinkClassName={"page-link"}
           activeClassName={"active"}
         />
-        <Films
-          films={films}
-          onPageChanged={onPageChanged}
-          pagesCount={pagesCount}
-          currentPage={currentPage}/>
+        <Films films={films}/>
         <ReactPaginate
           previousLabel={"Back"}
           nextLabel={"Next"}

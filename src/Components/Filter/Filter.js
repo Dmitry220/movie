@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getGenreAndCountries} from "../../Redux/actions";
 import {useHistory} from "react-router-dom";
@@ -25,7 +25,7 @@ const Filter = () => {
    const [order, setOrder] = useState()
 
    const SubmitFilter = () => {
-      history.push(`/films/${ratingFrom === undefined ? 0 : ratingFrom}/${ratingTo === undefined ? 10 : ratingTo}/${yearFrom === undefined ? 1950 : yearFrom}/${yearTo === undefined ? currentYear : yearTo}/${genre === undefined ? 19 : genre}/${country === undefined ? 1 : country}/${order === undefined ? "RATING" : order}`)
+      history.push(`/films/${ratingFrom === undefined ? 0 : ratingFrom}/${ratingTo === undefined ? 10 : ratingTo}/${yearFrom === undefined ? 1950 : yearFrom}/${yearTo === undefined ? currentYear : yearTo}/${genre === undefined ? 0 : genre}/${country === undefined ? 0 : country}/${order === undefined ? "RATING" : order}`)
    }
 
    const SearchRating = (render, handle, value, un, percent) => {
@@ -44,7 +44,6 @@ const Filter = () => {
    const genreChange = value => setGenre(value.target.value)
 
 
-
    useEffect(() => {
       dispatch(getGenreAndCountries());
    }, [dispatch]);
@@ -55,10 +54,12 @@ const Filter = () => {
         <div className={filterStyle.filter}>
            <div className="filter__container">
               <div className={filterStyle.filter__body}>
-                 <h3 className={darkTheme ? filterStyle.filter__title + ' ' + filterStyle.dark : filterStyle.filter__title}>Фильтр</h3>
+                 <h3
+                   className={darkTheme ? filterStyle.filter__title + ' ' + filterStyle.dark : filterStyle.filter__title}>Фильтр</h3>
                  <div className="filter__genre genre">
                     <div className="genre__container">
-                       <select className={filterStyle.genre__item + ' ' + filterStyle.select} onChange={genreChange} name={"Genre"}>
+                       <select className={filterStyle.genre__item + ' ' + filterStyle.select} onChange={genreChange}
+                               name={"Genre"}>
                           <option value="">Жанр</option>
                           {genres.map(genre => <option value={genre.id} key={genre.id}>{genre.genre}</option>)}
                        </select>
@@ -66,9 +67,11 @@ const Filter = () => {
                  </div>
                  <div className="filter__country country">
                     <div className="country__container">
-                       <select className={filterStyle.country__item + ' ' + filterStyle.select} onChange={countryChange} name={"Country"}>
+                       <select className={filterStyle.country__item + ' ' + filterStyle.select} onChange={countryChange}
+                               name={"Country"}>
                           <option value="">Страна</option>
-                          {countries.map(country => <option key={country.id} value={country.id}>{country.country}</option>)}
+                          {countries.map(country => <option key={country.id}
+                                                            value={country.id}>{country.country}</option>)}
                        </select>
                     </div>
                  </div>
@@ -97,7 +100,7 @@ const Filter = () => {
                  </div>
                  <div className={filterStyle.filter__rating + ' ' + filterStyle.rating}>
                     <div className="rating__container">
-                       <h3 className={ filterStyle.ratting__title + ' ' + filterStyle.subtitle}>Рейтинг</h3>
+                       <h3 className={filterStyle.ratting__title + ' ' + filterStyle.subtitle}>Рейтинг</h3>
                        <div className={filterStyle.rating__item}>
                           <Nouislider range={{min: 0, max: 10}}
                                       start={[0, 10]}
@@ -114,133 +117,9 @@ const Filter = () => {
                  </div>
               </div>
            </div>
-
         </div>
-
-        {/*<div>*/}
-        {/*           <div key="sub1" icon={''} title="Жанры">*/}
-        {/*               <div*/}
-        {/*                   showSearch*/}
-        {/*                   style={{width: '100%'}}*/}
-        {/*                   placeholder="Выберите жанр"*/}
-        {/*                   optionFilterProp="children"*/}
-        {/*                   onChange={onGenreChange}*/}
-        {/*                   listHeight={500}*/}
-        {/*                   filterOption={(input, option) =>*/}
-        {/*                       option.children.toLowerCase().indexOf(input.toLowerCase()) === 0*/}
-        {/*                   }*/}
-        {/*               >*/}
-        {/*                   {genres.map((g) => {*/}
-        {/*                       return (*/}
-        {/*                           <div*/}
-        {/*                               key={g.id}*/}
-
-        {/*                           >*/}
-        {/*                               {g.genre}*/}
-        {/*                           </div>*/}
-        {/*                       );*/}
-        {/*                   })}*/}
-        {/*               </div>*/}
-        {/*           </div>*/}
-        {/*           <div key="sub2" icon={''} title="Страны">*/}
-        {/*               <div*/}
-        {/*                   showSearch*/}
-        {/*                   style={{width: '100%'}}*/}
-        {/*                   listHeight={500}*/}
-        {/*                   placeholder="Введите название страны"*/}
-        {/*                   optionFilterProp="children"*/}
-        {/*                   onChange={onCountryChange}*/}
-        {/*                   filterOption={(input, option) =>*/}
-        {/*                       option.children.toLowerCase().indexOf(input.toLowerCase()) === 0*/}
-        {/*                   }*/}
-        {/*               >*/}
-        {/*                   {countries.map((c) => {*/}
-        {/*                       return (*/}
-        {/*                           <div*/}
-        {/*                               key={c.id}*/}
-        {/*                               value={c.id}*/}
-        {/*                           >*/}
-        {/*                               {c.country}*/}
-        {/*                           </div>*/}
-        {/*                       );*/}
-        {/*                   })}*/}
-        {/*               </div>*/}
-        {/*           </div>*/}
-        {/*           <div key="sub3" icon={''} title="Год">*/}
-        {/*               <div min={1880} max={year}*/}
-        {/*                       style={{paddingLeft: 5}}*/}
-        {/*                       trackStyle={{backgroundColor: 'red', height: 20}}*/}
-        {/*                       handleStyle={{borderColor: 'red', height: 20}}*/}
-        {/*                       range={true}*/}
-        {/*                       onChange={yearSliderOnChange}*/}
-        {/*                       defaultValue={[selectedYear.min, selectedYear.max]}*/}
-        {/*                       value={[selectedYear.min, selectedYear.max]}*/}
-        {/*               />*/}
-        {/*               <div justify="space-around" align="middle" style={{paddingLeft: 5, paddingRight: 5, paddingBottom: 15}}>*/}
-        {/*                   <div*/}
-        {/*                       className="min-input-main"*/}
-        {/*                       min={1880}*/}
-        {/*                       max={year}*/}
-        {/*                       value={selectedYear.min}*/}
-        {/*                       onChange={yearInputMinOnChange}*/}
-        {/*                   />*/}
-        {/*                   <div> до</div>*/}
-        {/*                   <div*/}
-        {/*                       className="min-input-main"*/}
-        {/*                       min={1880}*/}
-        {/*                       max={year}*/}
-        {/*                       value={selectedYear.max}*/}
-        {/*                       onChange={yearInputMaxOnChange}*/}
-        {/*                   />*/}
-        {/*               </div>*/}
-        {/*           </div>*/}
-        {/*           <div key="sub4" icon={''} title="Рейтинг">*/}
-        {/*               <div min={0} max={10}*/}
-        {/*                       style={{paddingLeft: 5}}*/}
-        {/*                       trackStyle={{backgroundColor: 'red', height: 20}}*/}
-        {/*                       handleStyle={{borderColor: 'red', height: 20}}*/}
-        {/*                       range={true}*/}
-        {/*                       onChange={ratingSliderOnChange}*/}
-        {/*                       defaultValue={[selectedRating.min, selectedRating.max]}*/}
-        {/*                       value={[selectedRating.min, selectedRating.max]}*/}
-        {/*               />*/}
-        {/*               <div justify="space-around" align="middle" style={{paddingLeft: 5, paddingRight: 5, paddingBottom: 15}}>*/}
-        {/*                   <input*/}
-        {/*                       className="min-input-main"*/}
-        {/*                       min={0}*/}
-        {/*                       max={10}*/}
-        {/*                       value={selectedRating.min}*/}
-        {/*                       onChange={ratingInputMinOnChange}*/}
-        {/*                   />*/}
-        {/*                   <div> до</div>*/}
-        {/*                   <div*/}
-        {/*                       className="min-input-main"*/}
-        {/*                       min={0}*/}
-        {/*                       max={10}*/}
-        {/*                       value={selectedRating.max}*/}
-        {/*                       onChange={ratingInputMaxOnChange}*/}
-        {/*                   />*/}
-        {/*               </div>*/}
-        {/*           </div>*/}
-        {/*           <div key="sub5" icon={''} title="Сортирвока">*/}
-        {/*               <seelct style={{width: '100%'}} defaultValue={'По году'} onChange={onSortTypeChange}>*/}
-        {/*                   {*/}
-        {/*                       listSort.map(el => (*/}
-        {/*                           <option key={el}>{el}</option>*/}
-        {/*                       ))*/}
-        {/*                   }*/}
-        {/*               </seelct>*/}
-        {/*           </div>*/}
-        {/*           <div justify={'center'} style={{marginTop: 10}}>*/}
-        {/*               <button type={darkTheme && "primary"} block><Link*/}
-        {/*                   to={`/films/${filteredParams.join('')}`}>Отфильтровать</Link></button>*/}
-        {/*           </div>*/}
-        {/*       </div>*/}
-
      </>
-);
-
-
+   );
 };
 
 export default Filter;

@@ -4,16 +4,10 @@ import {Preloader} from "../Loader/Preloader";
 import {CardFilm} from "./CardFilm";
 import {darkThemeSelector} from "../../Redux/selectors";
 
-const Films = ({films, currentPage, pagesCount, onPageChanged}) => {
+const Films = ({films}) => {
 
    console.log('Render Films')
-   const selectRating = (raiting) => {
-      if (raiting >= 9) return "green";
-      else if (raiting >= 7) return "yellow"
-      else if (raiting >= 5) return "orange";
-      else return "red";
-   }
-   if (pagesCount > 20) pagesCount = 20
+
    const favouriteFilms = useSelector((state) => state.favouriteFilms.favouriteFilms)
    const isLoading = useSelector(state => state.films.isLoading)
    const darkTheme = useSelector(darkThemeSelector);

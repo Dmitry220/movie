@@ -1,4 +1,3 @@
-import React from "react";
 
 export const StyleMobile = (initial, styleName, val1, val2) => {
    let resultStyle = styleName
