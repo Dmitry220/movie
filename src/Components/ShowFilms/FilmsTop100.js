@@ -2,7 +2,7 @@ import React, {memo, useEffect} from "react";
 import Films from "../Films/Films";
 import {getTop100Films} from "../../Redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {Preloader} from "../Loader/Preloader";
+import ReactPaginate from "react-paginate";
 
 export const FilmsTop100 = () => {
     console.log('Render Top 100')
@@ -10,23 +10,65 @@ export const FilmsTop100 = () => {
     const pagesCount = useSelector(state => state.films.pagesCount)
     const films = useSelector(state => state.films.films)
 
+
     const dispatch = useDispatch();
 
     useEffect(()=>{
         dispatch(getTop100Films(currentPage))
     },[currentPage])
 
-    const onPageChanged = (pageNumber) => {
+    const onPageChanged = (data) => {
+        let pageNumber = data.selected + 1
         dispatch(getTop100Films(pageNumber))
     };
     return (
-            <div className="container pt-5">
-                    <Films
-                        films={films}
-                        onPageChanged={onPageChanged}
-                        pagesCount={pagesCount}
-                        currentPage={currentPage}/>
-            </div>
+<div className={'container__film'}>
+    <ReactPaginate
+      previousLabel={"Back"}
+      nextLabel={"Next"}
+      breakLabel={"..."}
+      pageCount={pagesCount > 20 ? 20 : pagesCount}
+      marginPagesDisplayed={2}
+      pageRangeDisplayed={3}
+      onPageChange={onPageChanged}
+      containerClassName={"pagination"}
+      pageClassName={"page-item"}
+      pageLinkClassName={"page-link"}
+      previousClassName={"page-item"}
+      previousLinkClassName={"page-link"}
+      nextClassName={"page-item"}
+      nextLinkClassName={"page-link"}
+      breakClassName={"page-item"}
+      breakLinkClassName={"page-link"}
+      activeClassName={"active"}
+    />
+    <Films
+      films={films}
+      onPageChanged={onPageChanged}
+      pagesCount={pagesCount}
+      currentPage={currentPage}/>
+    <ReactPaginate
+      previousLabel={"Back"}
+      nextLabel={"Next"}
+      breakLabel={"..."}
+      pageCount={pagesCount > 20 ? 20 : pagesCount}
+      marginPagesDisplayed={2}
+      pageRangeDisplayed={3}
+      onPageChange={onPageChanged}
+      containerClassName={"pagination"}
+      pageClassName={"page-item"}
+      pageLinkClassName={"page-link"}
+      previousClassName={"page-item"}
+      previousLinkClassName={"page-link"}
+      nextClassName={"page-item"}
+      nextLinkClassName={"page-link"}
+      breakClassName={"page-item"}
+      breakLinkClassName={"page-link"}
+      activeClassName={"active"}
+    />
+</div>
+
+
     );
 };
 

@@ -2,7 +2,7 @@ import * as axios from "axios";
 import { API_KEY } from "../Redux/typeAction";
 
 const instance = axios.create({
-    baseURL: "https://kinopoiskapiunofficial.tech/api/v2.1/films/",
+    baseURL: "https://kinopoiskapiunofficial.tech/api/v2.1/films",
     headers: {
         "Content-Type": "aplication/json",
         "X-API-KEY": API_KEY,
@@ -12,25 +12,23 @@ const instance = axios.create({
 export const filmsAPI = {
 
     getFilmsTOP100(currentPage=1) {
-        return instance.get(`top?type=TOP_100_POPULAR_FILMS&page=${currentPage}`);
+        return instance.get(`/top?type=TOP_100_POPULAR_FILMS&page=${currentPage}`);
     },
     getAwaitFilms(currentPage) {
-        return instance.get(`top?type=TOP_AWAIT_FILMS&page=${currentPage}`);
+        return instance.get(`/top?type=TOP_AWAIT_FILMS&page=${currentPage}`);
 
     },
     getFilmsFromSearch(inputText, currentPage) {
         return instance.get(
-            `search-by-keyword?keyword=${inputText}&page=${currentPage}`
+            `/search-by-keyword?keyword=${inputText}&page=${currentPage}`
         );
     },
     getListGenreAndCountry (){
         return instance.get(`filters`);
     },
-    // return instance.get(`search-by-filters?order=YEAR&country=${idCountry}&genre=${idGenre}
-    //     &ratingFrom=${ratingFrom}&ratingTo=${ratingTo}&yearFrom=${yearFrom}&yearTo=${yearTo}&page=${currentPage}`)
-    getFilteredParams (filteredParams, currentPage){
-        console.log(filteredParams)
-        return instance.get(`search-by-filters?${filteredParams}&page=${currentPage}`)
+
+    filterSearch (ratingFrom , ratingTo , yearFrom , yearTo , page , genre , country, order){
+        return instance.get(`/search-by-filters?genre=${genre}&country=${country}&order=${order}&type=ALL&ratingFrom=${ratingFrom}&ratingTo=${ratingTo}&yearFrom=${yearFrom}&yearTo=${yearTo}&page=${page}`)
     },
     getFilmsById(id){
         return instance.get(`${id}`)

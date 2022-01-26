@@ -1,73 +1,98 @@
-import React, {useState} from "react";
-import './header.css'
+import React, {useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {useHistory} from "react-router";
+import header from './header.module.css'
 import {Link} from "react-router-dom";
-import {changeTheme, handlerInput} from "../../Redux/actions";
-import {Col, Layout, Row, Input, Tooltip, Button, Switch, Form, Menu, Typography, Badge} from "antd";
-import 'antd/dist/antd.css';
-import { darkThemeSelector} from "../../Redux/selectors";
-import './header.css'
-import logo from "../../logo.svg";
-import { MenuOutlined } from '@ant-design/icons'
+import {useHistory} from "react-router";
+import {darkThemeSelector} from "../../Redux/selectors";
+import logo from './../../logo.svg'
+import {StyleMobile} from "../utils/StyleMob";
 
-export const Header = () => {
 
-    console.log('Render Header')
-    const history = useHistory();
-    const dispatch = useDispatch();
-    const {Header} = Layout;
-    const [searchValue, setSearchValue] = useState('');
-    const darkTheme = useSelector(darkThemeSelector);
-    const favouriteFilms = useSelector(state => state.favouriteFilms.favouriteFilms)
-    const onSearch = () => {
-        dispatch(handlerInput(searchValue));
-        history.push(`/film/${searchValue}`)
-    };
-    return (
-        <Row justify='space-between' style={{ position: 'fixed', zIndex: 145, width: '100%' }}>
-            <Col xl={24} lg={24} md={24} sm={24} xs={24}>
-                <Header className={!darkTheme && 'headerFixed'}>
-                    <Row>
 
-                        <Col xl={12} lg={12} md={12} sm={4} xs={4}>
-                            <Menu
-                                theme={darkTheme ? 'dark' : 'light'}
-                                mode='horizontal'
-                                defaultSelectedKeys={["item1"]}
-                                overflowedIndicator={<MenuOutlined />}
-                            >
-                                <Menu.Item key="1">
-                                    <Link to="/top100" className="btn btn-primary">100 лучших фильмов</Link>
-                                </Menu.Item>
-                                <Menu.Item key="2">
+export const Header = ({themeToggler, burgerActive, setBurgerActive}) => {
 
-                                        <Link to="/favourite" className="btn btn-primary">
-                                            <Badge count={favouriteFilms.length} offset={[15, 3]}>
-                                              <span className={darkTheme ? 'textBadge textBadgeDark':'textBadge'}>Мои любимые фильмы</span>
-                                            </Badge>
-                                        </Link>
-                                </Menu.Item>
-                                <Menu.Item key="3">
-                                    <label htmlFor={'theme'}
-                                           className={darkTheme ? 'textThemeDark' : 'textTheme'}>{!darkTheme ? 'Темная тема:' : 'Светлая тема:'} </label>
-                                    <Switch id='theme' size="small" checked={darkTheme}
-                                            onChange={() => dispatch(changeTheme())}/>
-                                </Menu.Item>
-                            </Menu>
-                        </Col>
-                        <Col xl={12} lg={12} md={12} sm={20} xs={20}>
-                            <Form onFinish={onSearch}>
-                                <Input  onChange={(e)=>setSearchValue(e.target.value)} placeholder="Введите название фильма"
-                                        className={darkTheme ? 'inputSearch inputSearchDark' : 'inputSearch'}/>
-                                <div className={darkTheme ? 'search searchDark' : 'search'}></div>
-                            </Form>
-                        </Col>
-                    </Row>
-                </Header>
-            </Col>
-        </Row>
-    );
+   console.log('Render Header')
+   const history = useHistory();
+   const [searchValue, setSearchValue] = useState('');
+   const darkTheme = useSelector(darkThemeSelector);
+   const [timer, setTimer] = useState(null)
+   const dispatch = useDispatch()
+
+   const search = (e) => setSearchValue(e.target.value)
+
+   useEffect(()=>{
+      if (searchValue === ''){
+         return
+      }
+      if (timer) {
+         clearTimeout(timer)
+      }
+      setTimer(
+        setTimeout(async () => {
+           await history.push(`/film/${searchValue}`)
+        }, 500)
+      )
+   },[searchValue])
+
+   let scrollPrev = 0;
+
+   useEffect(() => {
+
+      const onScroll = e => {
+         let scrolled = window.pageYOffset;
+         if (scrolled > 100 && scrolled > scrollPrev) {
+            document.querySelector(`.${header.header}`).classList.add(`${header.out}`);
+         } else {
+            document.querySelector(`.${header.header}`).classList.remove(`${header.out}`);
+         }
+         scrollPrev = scrolled;
+      };
+      window.addEventListener("scroll", onScroll);
+      return () => window.removeEventListener("scroll", onScroll);
+   }, [scrollPrev])
+
+   useEffect(() => {
+      document.querySelector('body').classList.toggle('lock');
+   }, [burgerActive])
+
+   return (
+     <header className={darkTheme ? header.header + ' ' + header.dark : header.header}>
+        <div className={header.header__container}>
+           <div className={header.header__body}>
+              <div className={header.header__column + ' ' + header.header__column_1}>
+                 <Link to="/" className={header.header__logo}><img src={logo} alt=""/> </Link>
+                 <div className={StyleMobile(header, header.header__burger, burgerActive, darkTheme)}
+                      onClick={() => setBurgerActive(prev => !prev)}>
+                    <span></span>
+                 </div>
+                 <nav className={StyleMobile(header, header.header__menu, burgerActive, darkTheme)}>
+                    <ul className={header.header__list}>
+                       <li><Link to="/top100" className={darkTheme ? header.header__link + ' ' + header.dark : header.header__link}>Топ 100</Link></li>
+                       <li><Link to="/favourite" className={darkTheme ? header.header__link + ' ' + header.dark : header.header__link}>Избранное</Link></li>
+                       <li className={header.themeCheck}>
+                          <label htmlFor={'theme'} className={darkTheme ? header.header__link + ' ' + header.dark : header.header__link}>Темная тема</label>
+                          <label className={header.switch}>
+                             <input type="checkbox" checked={darkTheme && true} onChange={()=>dispatch(themeToggler())} id={'theme'}/>
+                             <span className={header.slider + ' ' + header.round}></span>
+                          </label>
+                       </li>
+                    </ul>
+                 </nav>
+              </div>
+              <div className={header.header__column}>
+                 <form className={'form'}>
+                    <input
+                      onChange={(e) => search(e)} placeholder="Введите название фильма"
+                      className={darkTheme ? header.inputSearch + ' ' + header.inputSearchDark : header.inputSearch}
+                      value={searchValue}
+                    />
+                    <div className={darkTheme ? header.search + ' ' + header.searchDark : header.search}></div>
+                 </form>
+              </div>
+           </div>
+        </div>
+     </header>
+   );
 };
 
 

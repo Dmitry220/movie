@@ -1,26 +1,28 @@
-import React, {useEffect} from "react";
 import Films from "../Films/Films";
+import {getFilmsFromSearch} from "../../Redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {getAwaitFilms} from "../../Redux/actions";
+import React, {useEffect} from "react";
+import {useParams} from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
-export const FilmsAwaitFilms = () => {
+export const SearchFilms = (props) => {
 
-   console.log('Render start page')
-
-   const pagesCount = useSelector(state => state.films.pagesCount);
-   const currentPage = useSelector(state => state.films.currentPage);
-   const films = useSelector(state => state.films.films);
-   const dispatch = useDispatch()
+   const {name} = useParams();
+   const films = useSelector(state => state.films.films)
+   const pagesCount = useSelector(state => state.films.pagesCount)
+   const currentPage = useSelector(state => state.films.currentPage)
+   const dispatch = useDispatch();
 
    useEffect(() => {
-      dispatch(getAwaitFilms(currentPage));
-   }, [dispatch, currentPage])
+      dispatch(getFilmsFromSearch(name, 1));
+   }, [name])
 
-   const onPageChanged = (data) => {
+   let onPageChanged = (data) => {
       let pageNumber = data.selected + 1
-      dispatch(getAwaitFilms(pageNumber))
+      dispatch(getFilmsFromSearch(name, pageNumber));
    };
+
+   console.log('Render Show Films By Search');
 
    return (
      <div className={'container__film'}>
@@ -70,4 +72,5 @@ export const FilmsAwaitFilms = () => {
      </div>
    );
 };
+
 

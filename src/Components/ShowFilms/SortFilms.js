@@ -1,25 +1,26 @@
-import React, {useEffect} from "react";
+import React, {memo, useEffect} from "react";
 import Films from "../Films/Films";
+import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getAwaitFilms} from "../../Redux/actions";
+import {getMovieByFilter} from "../../Redux/actions";
 import ReactPaginate from "react-paginate";
 
-export const FilmsAwaitFilms = () => {
-
-   console.log('Render start page')
+const SortFilms = () => {
 
    const pagesCount = useSelector(state => state.films.pagesCount);
    const currentPage = useSelector(state => state.films.currentPage);
    const films = useSelector(state => state.films.films);
+   const {ratingFrom, ratingTo, yearFrom, yearTo, genre, country, order} = useParams()
    const dispatch = useDispatch()
 
    useEffect(() => {
-      dispatch(getAwaitFilms(currentPage));
-   }, [dispatch, currentPage])
+      console.log("Screening of films by genre ")
+      dispatch(getMovieByFilter(ratingFrom, ratingTo, yearFrom, yearTo, 1, genre, country, order))
+   }, [ratingFrom, ratingTo, yearFrom, yearTo, genre, country, order])
 
-   const onPageChanged = (data) => {
+   let onPageChanged = (data) => {
       let pageNumber = data.selected + 1
-      dispatch(getAwaitFilms(pageNumber))
+      dispatch(getMovieByFilter(ratingFrom, ratingTo, yearFrom, yearTo, pageNumber, genre, country, order));
    };
 
    return (
@@ -71,3 +72,4 @@ export const FilmsAwaitFilms = () => {
    );
 };
 
+export default SortFilms;

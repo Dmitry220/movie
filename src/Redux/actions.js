@@ -35,6 +35,7 @@ export const setFilms = (films, pagesCount, currentPage) => ({
 
 export const getTop100Films = (currentPage) => (dispatch) => {
     dispatch(showLoading())
+
     filmsAPI
         .getFilmsTOP100(currentPage)
         .then((response) => {
@@ -72,24 +73,27 @@ export const getFilmsFromSearch = (query, currentPage) => (dispatch) => {
         });
 };
 
+
 export const getGenreAndCountries  = () => (dispatch) => {
     filmsAPI.getListGenreAndCountry().then((response) => {
         dispatch(setGenresAndCountries(response.data.genres, response.data.countries));
     });
 };
 
-export const setFilteredParams = (filteredParams, currentPage = 1) => (dispatch) => {
+export const getMovieByFilter = (ratingFrom, ratingTo, yearFrom, yearTo, page ,genre, country, order) => (dispatch) => {
     dispatch(showLoading())
     filmsAPI
-        .getFilteredParams(filteredParams, currentPage)
+        .filterSearch(ratingFrom, ratingTo, yearFrom, yearTo, page, genre, country,order)
         .then((response) => {
+
+            console.log(response)
             if (response.status === 200) {
-                dispatch(setFilms(response.data.films, response.data.pagesCount, currentPage))
+                dispatch(setFilms(response.data.films, response.data.pagesCount, page))
                 dispatch(hideLoading())
             }
         })
         .catch(() => {
-            dispatch(setFilms([]))
+            dispatch(setFilms([], null, null))
             dispatch(hideLoading())
     });
 };

@@ -3,58 +3,112 @@ import './descriptionFilm.css'
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteSelectedFilmById, setSelectedFilmById} from "../../Redux/actions";
+import {FavoriteButtons} from "../Films/CardFilm";
 import {Preloader} from "../Loader/Preloader";
-import {Col, Image, Rate, Row} from "antd";
 import {darkThemeSelector} from "../../Redux/selectors";
 
 const DescriptionFilm = () => {
-    const {id} = useParams();
-    const dispatch = useDispatch();
-    const selectedFilm = useSelector(state => state.films.selectedMovie);
-    const isLoading = useSelector(state => state.films.isLoading)
-    const darkTheme = useSelector(darkThemeSelector);
+   const {id} = useParams();
+   const dispatch = useDispatch();
+   const selectedFilm = useSelector(state => state.films.selectedMovie);
+   const isLoading = useSelector(state => state.films.isLoading)
+   const favouriteFilms = useSelector((state) => state.favouriteFilms.favouriteFilms)
+   const darkTheme = useSelector(darkThemeSelector);
 
-    useEffect(() => {
-        dispatch(setSelectedFilmById(id))
-        return ()=>{
-            dispatch(deleteSelectedFilmById())
-        }
-    }, [id])
+   useEffect(() => {
+      dispatch(setSelectedFilmById(id))
+      return () => {
+         dispatch(deleteSelectedFilmById())
+      }
+   }, [id])
 
-    return (
-        <Row className="movie_top">
-            {
-                isLoading ? <Preloader/> : selectedFilm && <div>
-                    <Row style={{padding: '115px  0 0 32px'}}>
-                        <Col  md={10} lg={10} xl={6}>
-                            <Image src={selectedFilm.posterUrl} width={250}/>
-                        </Col>
-                        <Col md={14} lg={14} xl={18}>
-                            <p className={darkTheme ? "movie_option movie_optionDark" : "movie_option"}><strong>Название: </strong>{selectedFilm.nameRu}</p>
-                            <p className={darkTheme ? "movie_option movie_optionDark" : "movie_option"}><strong>Слоган
-                                ограничения: </strong>{selectedFilm.slogan || 'Без слогана'}</p>
-                            <p className={darkTheme ? "movie_option movie_optionDark" : "movie_option"}><strong>Продолжительность: </strong>{selectedFilm.filmLength}
-                            </p>
-                            <p className={darkTheme ? "movie_option movie_optionDark" : "movie_option"}><strong>Страна: </strong>{selectedFilm.countries.map(c =>
-                                <span>{c.country} </span>)}</p>
-                            <p className={darkTheme ? "movie_option movie_optionDark" : "movie_option"}><strong>Год: </strong>{selectedFilm.year}</p>
-                            <p className={darkTheme ? "movie_option movie_optionDark" : "movie_option"}><strong>Жанр: </strong>{selectedFilm.genres.map(g =>
-                                <span>{g.genre} </span>)}</p>
-                            <p className={darkTheme ? "movie_option movie_optionDark" : "movie_option"}><strong>Возратсные
-                                ограничения: </strong>{selectedFilm.ratingAgeLimits}+</p>
+   if(!selectedFilm) return null
 
-                        </Col>
-                    </Row>
-                    <Row justify={'center'}>
-                        <Col span={23}>
-                            <p className={darkTheme ? "description descriptionDark" : "description"}>{selectedFilm.description}</p>
-                        </Col>
-                    </Row>
-
+   return (
+     <div className={'description'}>
+        {isLoading ? <Preloader/> :(
+          <div className="description__container">
+             <div className="description__row">
+                <div className="description__column description__column_1">
+                   <div className="description__image">
+                      <img src={selectedFilm.posterUrl} alt={''}/><br/>
+                   </div>
                 </div>
+                <div className="description__column">
+                   <div className="description__body">
+                      <div className="description__item">
+                         <div className={darkTheme ? "description__title dark" : "description__title"}>Название:</div>
+                         <div className={darkTheme ? "description__value dark" : "description__value"}>
+                            {selectedFilm.nameRu}
+                         </div>
+                      </div>
+                   </div>
+                   <div className="description__body">
+                      <div className="description__item">
+                         <div className={darkTheme ? "description__title dark" : "description__title"}>Слоагн:</div>
+                         <div className={darkTheme ? "description__value dark" : "description__value"}>
+                            {selectedFilm.slogan || 'Без слогана'}
+                         </div>
+                      </div>
+                   </div>
+                   <div className="description__body">
+                      <div className="description__item">
+                         <div className={darkTheme ? "description__title dark" : "description__title"}>Продолжительность:</div>
+                         <div className={darkTheme ? "description__value dark" : "description__value"}>
+                            {selectedFilm.filmLength}
+                         </div>
+                      </div>
+                   </div>
+                   <div className="description__body">
+                      <div className="description__item">
+                         <div className={darkTheme ? "description__title dark" : "description__title"}>Год:</div>
+                         <div className={darkTheme ? "description__value dark" : "description__value"}>
+                            {selectedFilm.year}
+                         </div>
+                      </div>
+                   </div>
+                   <div className="description__body">
+                      <div className="description__item">
+                         <div className={darkTheme ? "description__title dark" : "description__title"}>Жанр:</div>
+                         <div className={darkTheme ? "description__value dark" : "description__value"}>
+                            {selectedFilm.genres.map((g, index) => <span key={index}>{g.genre} </span>)}
+                         </div>
+                      </div>
+                   </div>
+                   <div className="description__body">
+                      <div className="description__item">
+                         <div className={darkTheme ? "description__title dark" : "description__title"}>Страна:</div>
+                         <div className={darkTheme ? "description__value dark" : "description__value"}>
+                            {selectedFilm.countries.map((c, index) => <span key={index}>{c.country} </span>)}
+                         </div>
+                      </div>
+                   </div>
+                   <div className="description__body">
+                      <div className="description__item">
+                         <div className={darkTheme ? "description__title dark" : "description__title"}>Возратные ограничения:</div>
+                         <div className={darkTheme ? "description__value dark" : "description__value"}>
+                            {selectedFilm.ratingAgeLimits}+
+                         </div>
+                      </div>
+                   </div>
+                   <div className="description__body">
+                      <div className={darkTheme ? "description__value dark" : "description__value"}>
+                         <FavoriteButtons favouriteFilms={favouriteFilms} film={selectedFilm}
+                                          filmId={selectedFilm.filmId}/>
+                      </div>
 
-            }
-        </Row>
-    )
+                   </div>
+                </div>
+             </div>
+             <div className={darkTheme ? "description__text dark" : "description__text"}>
+                <p>
+                   {selectedFilm.description}
+                </p>
+             </div>
+          </div>
+        )}
+
+     </div>
+   )
 }
 export default DescriptionFilm

@@ -3,7 +3,7 @@ import {
     HIDE_LOADING,
     SHOW_FILMS,
     SET_SELECTED_FILM_ID,
-    DELETE_SELECTED_FILM_ID,
+    DELETE_SELECTED_FILM_ID
 } from "./typeAction";
 
 let initialState = {
@@ -12,7 +12,7 @@ let initialState = {
     isLoading: false,
     currentPage: 1,
     selectedMovie: null,
-    isResponse: false
+    isResponse: false,
 }
 
 export const filmsReduser = (state = initialState, action) => {
